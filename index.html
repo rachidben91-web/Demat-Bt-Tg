@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
@@ -6,15 +5,18 @@
   <title>DEMAT-BT — Technicien</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
+
+<body data-mode="tech">
   <header class="topbar">
     <div class="brand">
       <div class="brand__title">DEMAT-BT</div>
       <div class="brand__sub">Dématérialisation BT — Technicien</div>
     </div>
 
+    
     <div class="topbar__center">
       <div class="topbar__datetime" id="topDatetime">—</div>
+      <div class="topbar__weather" id="topWeather">Météo communes</div>
     </div>
 
     <div class="topbar__actions">
@@ -26,18 +28,25 @@
       <button id="btnExtract" class="btn">
         <span>⚡</span> Extraire
       </button>
-
-      <button id="btnFullscreen" class="btn btn--secondary" title="Plein écran">
+<button id="btnFullscreen" class="btn btn--secondary" title="Plein écran">
         <span>⛶</span> Plein écran
       </button>
     </div>
   </header>
 
   <main class="layout">
+    <!-- Left: sidebar -->
     <aside class="sidebar card">
       <div class="card__title">Contrôle</div>
 
+      <!-- Badges carrés pour Zones et PDF -->
       <div class="control-badges">
+        <div class="control-badge" id="zonesBadge">
+          <div class="control-badge__icon">📍</div>
+          <div class="control-badge__label">Zones</div>
+          <div class="control-badge__status" id="zonesStatus">Chargement…</div>
+        </div>
+        
         <div class="control-badge" id="pdfBadge">
           <div class="control-badge__icon">📄</div>
           <div class="control-badge__label">PDF</div>
@@ -45,7 +54,8 @@
         </div>
       </div>
 
-      <div class="progress-badge" id="progressBadge" style="margin-top:12px;">
+      <!-- Badge de progression -->
+      <div class="progress-badge" id="progressBadge">
         <div class="progress-badge__header">
           <div class="progress-badge__icon">⚡</div>
           <div class="progress-badge__text" id="progMsg">Prêt.</div>
@@ -64,28 +74,75 @@
 
       <div class="divider"></div>
 
-      <div class="hint" id="dayHint">
-        Journée : —<br/>
-        BT : — • Docs : —
+      <div class="field">
+        <div class="label">Journée</div>
+        <div id="dayInfo" class="hint" style="font-size:12px;">—</div>
+      </div>
+
+</div>
+
+      <div class="divider"></div>
+<div class="hint">
+        Règle : <b>toute page après un BT</b> est rattachée à ce BT <b>jusqu'au BT suivant</b>.
       </div>
     </aside>
 
+    <!-- Right: content -->
     <section class="content">
-      <section id="viewTechnician" class="view view--active">
-        <div class="row row--space">
+      <!-- Brief view -->
+      <section id="viewBrief" class="view view--active">
+        <div class="briefHeader">
           <div>
             <h2 class="h2">Technicien</h2>
-            <div class="sub" id="daySubtitle">Charge un PDF “JOURNÉE_YYYY-MM-DD_…” puis clique Extraire.</div>
+            <div class="sub">Charge ton PDF journée → tes BT + docs s'affichent instantanément.</div>
           </div>
+          <div class="briefMeta" id="briefMeta"></div>
         </div>
 
-        <div id="techCards" class="cards"></div>
+        <div id="briefList" class="briefList"></div>
       </section>
+
+      <!-- Viewer modal -->
+      <div id="modal" class="modal" aria-hidden="true">
+        <div class="modal__backdrop" data-close="1"></div>
+        <div class="modal__panel card">
+          <div class="modal__top">
+            <div>
+              <div id="modalTitle" class="modal__title">Aperçu</div>
+              <div id="modalSubtitle" class="modal__sub"></div>
+            </div>
+
+            <div class="modal__actions">
+              <button id="btnPrevPage" class="btn btn--secondary">
+                <span>←</span> Page -
+              </button>
+              <button id="btnNextPage" class="btn btn--secondary">
+                Page + <span>→</span>
+              </button>
+              <button id="btnExportBt" class="btn">
+                <span>💾</span> Exporter BT (PDF)
+              </button>
+              <button class="btn btn--secondary" data-close="1">Fermer</button>
+            </div>
+          </div>
+
+          <div class="modal__body">
+            <canvas id="canvas"></canvas>
+          </div>
+
+          <div class="modal__footer">
+            <div id="modalInfo" class="hint"></div>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- pdf-lib conservé pour extensions futures -->
+  <!-- pdf-lib (export PDF BT) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+  <!-- data -->
+<!-- app -->
   <script src="./app.js"></script>
 </body>
 </html>
